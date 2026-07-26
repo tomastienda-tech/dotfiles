@@ -130,10 +130,24 @@ log stream --predicate 'process == "CmuxDock"'
 cat ~/.cmux/dock-probe.log
 ```
 
-## VS Code
+## VS Code — modo foco
 
-Minimalista a propósito: se queda con lo que usas — archivos, git y terminal — y se quita lo demás
-(minimapa, breadcrumbs, sticky scroll, lightbulb, resaltado de ocurrencias, barra de actividad al lado).
+Configurado para cómo lo usas de verdad: **visor de archivos, superficie de git/PRs, y terminal ocasional**.
+El código se escribe en pi dentro de cmux, así que la disposición está pensada para **leer**, no para editar.
+
+- **Sidebar a la derecha.** El ojo empieza en el margen izquierdo del código; un árbol ahí empuja cada línea
+  hacia dentro. A la derecha queda fuera del camino de lectura y sigue a una tecla.
+- **Iconos arriba, sobre esa sidebar** — no ocultos del todo: sin barra de actividad, Explorer y SCM pasan a
+  ser solo-teclado, y eso es peor trato para algo que usas constantemente.
+- **Panel secundario cerrado** — es donde vive el Chat en 1.127.
+- **`chat.agent.enabled: false`.** Los agentes corren en pi, en un terminal. Una segunda superficie de
+  agentes dentro del visor es justo lo que se está evitando.
+- **Barra de título desnuda**: sin command center, sin controles de layout, sin acciones de editor.
+- **Pestañas en modo preview, máximo 8.** Click simple en el árbol es *leer*, y no debería dejar veinte
+  pestañas fijadas detrás.
+- Fuera: minimapa, breadcrumbs, sticky scroll, glyph margin, lightbulb, resaltado de ocurrencias.
+- **Zen mode** afinado como segunda marcha real: conserva números de línea y barra de estado, quita el
+  resto, y **no** entra en pantalla completa.
 
 **El tema va dentro de `settings.json`, no como extensión.** Un repo de dotfiles no debería depender de una
 extensión publicada para verse bien, y así se genera desde los mismos tokens que el resto: 105 claves de

@@ -440,14 +440,41 @@ emit('cmux/cmux.json', JSON.stringify(cmux, null, 2) + '\n');
 //
 // Verified against VS Code 1.127.0.
 const vscode = {
-  // ── Minimal chrome ────────────────────────────────────────────────────
-  // Keep what the user actually asked for — files, git, terminal — and drop
-  // the rest. Every item below is something removed or quieted, not a
-  // preference sprinkled on top.
+  // ── Focus mode ────────────────────────────────────────────────────────
+  // This machine writes code in pi inside cmux. VS Code is a FILE VIEWER, a
+  // git/PR surface, and somewhere to open a terminal — so the layout is built
+  // around reading, not around authoring.
+  //
+  // Sidebar on the RIGHT: the eye starts at the left margin of the code, and
+  // a tree there pushes every line inward. On the right it is out of the
+  // reading path and still one keystroke away.
+  'workbench.sideBar.location': 'right',
+  // Icons ride on top of that sidebar instead of taking a permanent vertical
+  // strip. Not "hidden": with no activity bar the SCM and Explorer views are
+  // keyboard-only, which is a worse trade for something used constantly.
   'workbench.activityBar.location': 'top',
+  // The secondary sidebar is where Chat lives in 1.127. Closed by default.
+  'workbench.secondarySideBar.defaultVisibility': 'hidden',
+  'workbench.panel.defaultLocation': 'bottom',
+
+  // Strip the title bar furniture: none of it is used, all of it is noise.
+  'window.commandCenter': false,
+  'workbench.layoutControl.enabled': false,
+  'workbench.navigationControl.enabled': false,
+  'workbench.editor.editorActionsLocation': 'hidden',
+
+  // Agent UI off. Agents run in pi, in a terminal — a second agent surface
+  // inside the viewer is the thing being avoided, not a feature.
+  'chat.agent.enabled': false,
+
   'workbench.statusBar.visible': true,
   'workbench.editor.showTabs': 'multiple',
   'workbench.editor.tabSizing': 'shrink',
+  // Preview tabs: single-clicking through a tree is READING, and it should not
+  // leave twenty pinned tabs behind.
+  'workbench.editor.enablePreview': true,
+  'workbench.editor.limit.enabled': true,
+  'workbench.editor.limit.value': 8,
   'workbench.tree.indent': 14,
   'workbench.tree.renderIndentGuides': 'always',
   'workbench.list.smoothScrolling': true,
@@ -464,8 +491,15 @@ const vscode = {
   'editor.lightbulb.enabled': 'off',
   'editor.stickyScroll.enabled': false,
   'window.titleBarStyle': 'custom',
-  'window.commandCenter': false,
   'window.title': '${rootName}${separator}${activeEditorShort}',
+
+  // Zen mode as a real second gear, not a novelty: keep the line numbers and
+  // the status bar, drop everything else, do not go full screen.
+  'zenMode.hideLineNumbers': false,
+  'zenMode.hideStatusBar': false,
+  'zenMode.fullScreen': false,
+  'zenMode.centerLayout': false,
+  'zenMode.showTabs': 'multiple',
 
   // ── Type ──────────────────────────────────────────────────────────────
   // Same face and the same 10% extra leading as the terminal, so moving
@@ -483,7 +517,12 @@ const vscode = {
   // ── Git ───────────────────────────────────────────────────────────────
   // The built-in SCM view and Timeline cover history without an extension.
   'scm.diffDecorations': 'all',
-  'scm.showHistoryGraph': true,
+  // scm.graph.*, not the scm.showHistoryGraph I first reached for — that one
+  // does not exist and VS Code would have ignored it without a word.
+  'scm.graph.badges': 'filter',
+  'scm.graph.pageSize': 50,
+  'scm.graph.showIncomingChanges': true,
+  'scm.graph.showOutgoingChanges': true,
   'git.decorations.enabled': true,
   'git.autofetch': true,
   'git.confirmSync': false,
