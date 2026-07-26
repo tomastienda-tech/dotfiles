@@ -1,0 +1,9 @@
+# Extensions this configuration depends on.
+#
+# settings.json carries vim.* keys that only do something when vscodevim is
+# installed — on a machine without it they are silently inert, which is the
+# failure mode this file exists to prevent.
+#
+#   install:  cat vscode/extensions.txt | xargs -n1 code --install-extension
+#   refresh:  code --list-extensions > vscode/extensions.txt
+vscodevim.vim

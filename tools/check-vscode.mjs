@@ -43,8 +43,23 @@ if (existsSync(extDir)) {
     if (existsSync(pkg)) sources.push(pkg);
   }
 }
-const corpus = sources.map((f) => readFileSync(f, 'utf8')).join('\n');
-ok(`registry corpus: workbench bundle + ${sources.length - 1} bundled extension manifests`);
+// User-installed extensions register their own settings too, so they are part
+// of the corpus — but they are tracked separately, because a setting that only
+// exists thanks to an installed extension is a PORTABILITY problem: on a fresh
+// machine it silently does nothing until that extension is present.
+const bundledCount = sources.length - 1;
+const userExtDir = join(process.env.HOME ?? '', '.vscode/extensions');
+const userSources = [];
+if (existsSync(userExtDir)) {
+  for (const name of readdirSync(userExtDir)) {
+    const pkg = join(userExtDir, name, 'package.json');
+    if (existsSync(pkg)) userSources.push(pkg);
+  }
+}
+const coreCorpus = sources.map((f) => readFileSync(f, 'utf8')).join('\n');
+const userCorpus = userSources.map((f) => readFileSync(f, 'utf8')).join('\n');
+const corpus = `${coreCorpus}\n${userCorpus}`;
+ok(`registry: workbench + ${bundledCount} bundled + ${userSources.length} user extension manifests`);
 
 const settings = JSON.parse(readFileSync(join(ROOT, 'vscode/settings.json'), 'utf8'));
 
@@ -62,6 +77,30 @@ if (unknownSettings.length) {
   bad(`unknown setting(s), silently ignored by ${product.version}: ${unknownSettings.join(', ')}`);
 } else {
   ok(`all ${Object.keys(settings).length} setting ids exist`);
+}
+
+// Which settings only work because an extension is installed?
+const fromExtension = Object.keys(settings).filter(
+  (k) => !coreCorpus.includes(`"${k}"`) && !(k.startsWith('editor.') && coreCorpus.includes(`"${k.slice(7)}"`)),
+);
+if (fromExtension.length) {
+  const prefixes = [...new Set(fromExtension.map((k) => k.split('.')[0]))];
+  ok(`${fromExtension.length} setting(s) come from user extensions (${prefixes.join(', ')})`);
+  // The repo must declare them, or a fresh install gets settings that do nothing.
+  const listFile = join(ROOT, 'vscode/extensions.txt');
+  if (!existsSync(listFile)) {
+    bad('settings depend on extensions but vscode/extensions.txt does not exist');
+  } else {
+    const declared = readFileSync(listFile, 'utf8')
+      .split('\n')
+      .map((l) => l.trim().toLowerCase())
+      .filter((l) => l && !l.startsWith('#'));
+    const missing = prefixes.filter(
+      (pre) => !declared.some((d) => d.includes(pre.toLowerCase())),
+    );
+    if (missing.length) bad(`no declared extension provides: ${missing.join(', ')}`);
+    else ok(`every extension-provided prefix is declared in vscode/extensions.txt`);
+  }
 }
 
 // ── Enum values must be legal ───────────────────────────────────────────────
@@ -104,6 +143,59 @@ if (badHex.length) {
   bad(`malformed colour value(s): ${badHex.map(([k]) => k).join(', ')}`);
 } else {
   ok('every colour value is #rrggbb or #rrggbbaa');
+}
+
+// ── Keybindings ─────────────────────────────────────────────────────────────
+// A binding whose command does not exist is dead, and a `when` clause with a
+// misspelt context key never matches. Both fail silently — the key simply does
+// nothing, which is indistinguishable from the binding not being loaded.
+{
+  const kbPath = join(ROOT, 'vscode/keybindings.json');
+  if (existsSync(kbPath)) {
+    // VS Code accepts JSONC here; strip line comments the way it does.
+    const raw = readFileSync(kbPath, 'utf8').replace(/^\s*\/\/.*$/gm, '');
+    let kb;
+    try {
+      kb = JSON.parse(raw);
+      ok(`keybindings.json parses (${kb.length} bindings)`);
+    } catch (e) {
+      bad(`keybindings.json is not valid JSONC: ${e.message}`);
+      kb = [];
+    }
+
+    const cmds = [...new Set(kb.map((b) => b.command))];
+    const deadCmds = cmds.filter((c) => !corpus.includes(`"${c}"`));
+    if (deadCmds.length) bad(`command(s) that do not exist: ${deadCmds.join(', ')}`);
+    else ok(`all ${cmds.length} bound commands exist`);
+
+    // Context keys used in `when`, minus operators, literals and command ids.
+    const ctx = new Set();
+    for (const b of kb) {
+      for (const t of (b.when ?? '').match(/[A-Za-z][A-Za-z0-9]*/g) ?? []) {
+        if (!['true', 'false', 'workbench', 'view', 'scm', 'action'].includes(t)) ctx.add(t);
+      }
+    }
+    const deadCtx = [...ctx].filter((t) => !corpus.includes(`"${t}"`));
+    if (deadCtx.length) bad(`when-clause context key(s) that do not exist: ${deadCtx.join(', ')}`);
+    else ok(`all ${ctx.size} when-clause context keys exist`);
+  }
+}
+
+// ── Vim leader maps ─────────────────────────────────────────────────────────
+// Same failure shape: vscodevim silently does nothing for a command id it
+// cannot resolve.
+{
+  const maps = [
+    ...(settings['vim.normalModeKeyBindingsNonRecursive'] ?? []),
+    ...(settings['vim.visualModeKeyBindingsNonRecursive'] ?? []),
+  ];
+  const cmds = [...new Set(maps.flatMap((m) => m.commands ?? []))].filter(
+    // `:`-prefixed entries are vim ex-commands, not VS Code command ids.
+    (c) => typeof c === 'string' && !c.startsWith(':'),
+  );
+  const dead = cmds.filter((c) => !corpus.includes(`"${c}"`));
+  if (dead.length) bad(`vim leader map(s) target missing command(s): ${dead.join(', ')}`);
+  else ok(`all ${cmds.length} vim leader-map commands exist`);
 }
 
 // ── The system's own rule ───────────────────────────────────────────────────

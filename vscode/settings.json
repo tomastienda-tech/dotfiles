@@ -60,6 +60,200 @@
   "explorer.confirmDelete": true,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
+  "vim.leader": "<space>",
+  "vim.useSystemClipboard": true,
+  "vim.hlsearch": true,
+  "vim.incsearch": true,
+  "vim.smartRelativeLine": true,
+  "vim.surround": true,
+  "vim.easymotion": true,
+  "vim.highlightedyank.enable": true,
+  "vim.highlightedyank.duration": 180,
+  "vim.useCtrlKeys": true,
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-c>": false,
+    "<C-v>": false,
+    "<C-x>": false,
+    "<C-f>": false,
+    "<C-p>": false,
+    "<C-b>": false,
+    "<C-w>": false,
+    "<C-n>": false
+  },
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<leader>",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "q"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "e"
+      ],
+      "commands": [
+        "workbench.view.explorer"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "g"
+      ],
+      "commands": [
+        "workbench.view.scm"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "/"
+      ],
+      "commands": [
+        "workbench.action.findInFiles"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "d"
+      ],
+      "commands": [
+        "editor.action.revealDefinition"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "r"
+      ],
+      "commands": [
+        "references-view.findReferences"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.editor.nextChange"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "H"
+      ],
+      "commands": [
+        "workbench.action.editor.previousChange"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "z"
+      ],
+      "commands": [
+        "workbench.action.toggleZenMode"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "n"
+      ],
+      "commands": [
+        ":nohl"
+      ]
+    }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        ">"
+      ],
+      "commands": [
+        "editor.action.indentLines"
+      ]
+    },
+    {
+      "before": [
+        "<"
+      ],
+      "commands": [
+        "editor.action.outdentLines"
+      ]
+    }
+  ],
+  "vim.statusBarColorControl": true,
+  "vim.statusBarColors.normal": [
+    "#1e1d25",
+    "#9e9da5"
+  ],
+  "vim.statusBarColors.insert": [
+    "#be84fb",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.visual": [
+    "#4fcdcd",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.visualline": [
+    "#4fcdcd",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.visualblock": [
+    "#4fcdcd",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.replace": [
+    "#f24e56",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.searchinprogressmode": [
+    "#f1bf4e",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.commandlineinprogress": [
+    "#2a2932",
+    "#cccbd1"
+  ],
+  "vim.statusBarColors.easymotionmode": [
+    "#8bafff",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.easymotioninputmode": [
+    "#8bafff",
+    "#0a090f"
+  ],
+  "vim.statusBarColors.surroundinputmode": [
+    "#9d69d2",
+    "#0a090f"
+  ],
   "workbench.colorCustomizations": {
     "focusBorder": "#be84fb",
     "selection.background": "#301d43",

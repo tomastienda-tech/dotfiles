@@ -535,7 +535,75 @@ const vscode = {
   'files.trimTrailingWhitespace': true,
   'files.insertFinalNewline': true,
 
+  // ── Vim (vscodevim 1.32.4) ────────────────────────────────────────────
+  // Space as leader, the way every modern config does it: it is the largest
+  // key, reachable with either thumb, and unused in normal mode.
+  'vim.leader': '<space>',
+  'vim.useSystemClipboard': true,
+  'vim.hlsearch': true,
+  'vim.incsearch': true,
+  'vim.smartRelativeLine': true,
+  'vim.surround': true,
+  'vim.easymotion': true,
+  'vim.highlightedyank.enable': true,
+  'vim.highlightedyank.duration': 180,
+
+  // Ctrl keys go to VS Code, not to vim, for the handful where VS Code's
+  // meaning is the one wanted. Everything not listed stays with vim.
+  'vim.useCtrlKeys': true,
+  'vim.handleKeys': {
+    '<C-a>': false, // select all
+    '<C-c>': false, // copy — the vim meaning is a mode exit nobody uses here
+    '<C-v>': false, // paste
+    '<C-x>': false,
+    '<C-f>': false, // find widget, not page-down
+    '<C-p>': false, // quick open
+    '<C-b>': false, // toggle sidebar
+    '<C-w>': false, // close editor
+    '<C-n>': false,
+  },
+
+  // Leader maps for a READER: jump, fold, search, diff. No editing verbs —
+  // those are vim's own and do not need remapping.
+  'vim.normalModeKeyBindingsNonRecursive': [
+    { before: ['<leader>', 'w'], commands: ['workbench.action.files.save'] },
+    { before: ['<leader>', 'q'], commands: ['workbench.action.closeActiveEditor'] },
+    { before: ['<leader>', 'e'], commands: ['workbench.view.explorer'] },
+    { before: ['<leader>', 'g'], commands: ['workbench.view.scm'] },
+    { before: ['<leader>', 'f'], commands: ['workbench.action.quickOpen'] },
+    { before: ['<leader>', '/'], commands: ['workbench.action.findInFiles'] },
+    { before: ['<leader>', 'd'], commands: ['editor.action.revealDefinition'] },
+    { before: ['<leader>', 'r'], commands: ['references-view.findReferences'] },
+    { before: ['<leader>', 'h'], commands: ['workbench.action.editor.nextChange'] },
+    { before: ['<leader>', 'H'], commands: ['workbench.action.editor.previousChange'] },
+    { before: ['<leader>', 'z'], commands: ['workbench.action.toggleZenMode'] },
+    // Clear the search highlight — hlsearch is on, so this is needed often.
+    { before: ['<leader>', 'n'], commands: [':nohl'] },
+  ],
+  'vim.visualModeKeyBindingsNonRecursive': [
+    // Keep the yanked text selected instead of collapsing to the start.
+    { before: ['>'], commands: ['editor.action.indentLines'] },
+    { before: ['<'], commands: ['editor.action.outdentLines'] },
+  ],
+
   // ── Iris ──────────────────────────────────────────────────────────────
+  // The status bar carries the vim mode as colour. This is a MODE, so it is
+  // ranked by how much damage the next keystroke can do rather than by
+  // identity: quiet in normal, accent while actively inserting, teal while
+  // selecting, red in replace — the only mode that overwrites silently.
+  'vim.statusBarColorControl': true,
+  'vim.statusBarColors.normal': [ink[2], ink[7]],
+  'vim.statusBarColors.insert': [accent.base, ink[0]],
+  'vim.statusBarColors.visual': [state.info, ink[0]],
+  'vim.statusBarColors.visualline': [state.info, ink[0]],
+  'vim.statusBarColors.visualblock': [state.info, ink[0]],
+  'vim.statusBarColors.replace': [state.error, ink[0]],
+  'vim.statusBarColors.searchinprogressmode': [state.warning, ink[0]],
+  'vim.statusBarColors.commandlineinprogress': [ink[3], ink[8]],
+  'vim.statusBarColors.easymotionmode': [state.special, ink[0]],
+  'vim.statusBarColors.easymotioninputmode': [state.special, ink[0]],
+  'vim.statusBarColors.surroundinputmode': [accent.dim, ink[0]],
+
   'workbench.colorCustomizations': {
     focusBorder: accent.base,
     'selection.background': accent.wash,

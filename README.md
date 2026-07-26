@@ -149,6 +149,41 @@ El código se escribe en pi dentro de cmux, así que la disposición está pensa
 - **Zen mode** afinado como segunda marcha real: conserva números de línea y barra de estado, quita el
   resto, y **no** entra en pantalla completa.
 
+### Teclas
+
+Misma convención que AeroSpace: **Hyper + letra = "ir a un sitio"**. Cada una alterna — si ya estás en esa
+vista, te devuelve al editor.
+
+| tecla | va a |
+|---|---|
+| `✦E` | explorador |
+| `✦G` | git (SCM) |
+| `✦O` | abrir archivo |
+| `✦M` | problemas |
+| `` ✦` `` | terminal |
+| `✦D` / `✦⇧D` | siguiente / anterior cambio |
+| `✦U` | zen mode |
+
+La elección de letras **no es estética**: AeroSpace ata `b f h j k l n p q r t`, dígitos, flechas y
+`= ; [ ]` como hotkeys **globales**, así que nunca llegan a VS Code. Karabiner se queda `a c v x z s w`.
+Lo que sobra es `d e g i m o u y`.
+
+Y se evita Hyper+**Shift** a propósito: pi usa `✦⇧N/T/F/R`, y si corres pi en el terminal integrado VS Code
+se las tragaría antes de que el terminal las viese.
+
+### Vim
+
+`vscodevim` con **espacio como leader**. Los mapeos son de *lector*, no de editor — saltar, buscar, navegar
+diffs — porque los verbos de edición ya son de vim y no necesitan remapeo.
+
+`<space>` + `e` explorador · `g` git · `f` buscar archivo · `/` buscar en archivos · `d` definición ·
+`r` referencias · `h`/`H` cambio siguiente/anterior · `z` zen · `w` guardar · `q` cerrar · `n` quitar
+resaltado de búsqueda.
+
+**La barra de estado se tiñe según el modo**, con la paleta: gris en normal, acento al insertar, teal al
+seleccionar, y **rojo en replace** — el único modo que sobrescribe en silencio. Es un ranking por daño
+potencial, no por identidad.
+
 **El tema va dentro de `settings.json`, no como extensión.** Un repo de dotfiles no debería depender de una
 extensión publicada para verse bien, y así se genera desde los mismos tokens que el resto: 105 claves de
 `workbench.colorCustomizations` más las reglas de sintaxis, con la misma jerarquía que el tema de pi y la

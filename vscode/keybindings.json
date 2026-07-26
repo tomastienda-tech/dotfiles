@@ -1,0 +1,70 @@
+// Hyper (⌃⌥⌘) navigation for VS Code, matching the AeroSpace convention:
+// Hyper + letter means "go to a place".
+//
+// Letter choice is constrained, not aesthetic. AeroSpace binds plain Hyper on
+// b f h j k l n p q r t, the digits, the arrows, = ; [ ] — those are GLOBAL
+// hotkeys and never reach VS Code at all. Karabiner takes a c v x z s w (→ ⌘)
+// and r (→ ⌃R). What is left is d e g i m o u y plus the symbols, so the
+// bindings below come out of that set.
+//
+// Hyper+SHIFT is deliberately avoided here: pi uses ✦⇧N/T/F/R for its session
+// commands, and when pi runs in VS Code's integrated terminal, VS Code would
+// swallow those before the terminal ever saw them.
+//
+// Each view binding toggles: pressing it while already in that view returns
+// focus to the editor, so the same key gets you there and back.
+[
+  {
+    "key": "ctrl+alt+cmd+e",
+    "command": "workbench.view.explorer",
+    "when": "!explorerViewletFocus"
+  },
+  {
+    "key": "ctrl+alt+cmd+e",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "explorerViewletFocus"
+  },
+
+  // There is no scmViewletFocus context key — the Explorer has one, SCM does
+  // not. `sideBarFocus && activeViewlet` is how VS Code itself expresses this,
+  // and it works for any view without needing a per-view key.
+  {
+    "key": "ctrl+alt+cmd+g",
+    "command": "workbench.view.scm",
+    "when": "!(sideBarFocus && activeViewlet == 'workbench.view.scm')"
+  },
+  {
+    "key": "ctrl+alt+cmd+g",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "sideBarFocus && activeViewlet == 'workbench.view.scm'"
+  },
+
+  { "key": "ctrl+alt+cmd+o", "command": "workbench.action.quickOpen" },
+  { "key": "ctrl+alt+cmd+m", "command": "workbench.actions.view.problems" },
+
+  {
+    "key": "ctrl+alt+cmd+`",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "ctrl+alt+cmd+`",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus"
+  },
+
+  // Reviewing a diff is most of what this editor is for.
+  { "key": "ctrl+alt+cmd+d", "command": "workbench.action.editor.nextChange" },
+  { "key": "ctrl+alt+cmd+shift+d", "command": "workbench.action.editor.previousChange" },
+
+  { "key": "ctrl+alt+cmd+u", "command": "workbench.action.toggleZenMode" },
+
+  // Escape leaves the terminal without needing the mouse. Vim's own Escape
+  // still works inside the editor — this only applies with the terminal
+  // focused and no text selected, so it cannot eat a selection-clear.
+  {
+    "key": "escape",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus && !terminalTextSelected"
+  }
+]

@@ -46,6 +46,7 @@ MAP=(
   # VS Code settings live outside ~/.config, and the whole palette is in here
   # via colorCustomizations rather than as a theme extension.
   "file:vscode/settings.json:$HOME/Library/Application Support/Code/User/settings.json"
+  "file:vscode/keybindings.json:$HOME/Library/Application Support/Code/User/keybindings.json"
 )
 
 # ── Back up whatever is already there ───────────────────────────────────────
@@ -108,6 +109,9 @@ cat <<'NEXT'
   Wallpaper — pick the resolution for your display:
     cp wallpapers/iris-dark-3024x1964.png ~/Pictures/
     osascript -e 'tell application "System Events" to set picture of every desktop to "'"$HOME"'/Pictures/iris-dark-3024x1964.png"'
+
+  VS Code extensions the settings depend on:
+    cat vscode/extensions.txt | grep -v '^#' | xargs -n1 code --install-extension
 
   CmuxDock (optional, macOS notch indicator):
     (cd swift/CmuxDock && ./build.sh --install)
