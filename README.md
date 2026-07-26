@@ -163,6 +163,26 @@ vista, te devuelve al editor.
 | `✦D` / `✦⇧D` | siguiente / anterior cambio |
 | `✦M` | zen mode |
 
+### La misma gramática que cmux
+
+cmux es muy consistente con la navegación, así que VS Code la copia tecla por tecla — en VS Code las
+pestañas son editores y los paneles son *editor groups*, así que el mapeo es uno a uno:
+
+| tecla | cmux | VS Code |
+|---|---|---|
+| `⌘⇧[` / `⌘⇧]` | pestaña anterior / siguiente | editor anterior / siguiente |
+| `⌃1`…`⌃8` | pestaña por número | editor por número |
+| `⌥⌘` ← → ↑ ↓ | mover foco entre paneles | mover foco entre grupos |
+
+`KeyCode.BracketLeft/Right` tienen **cero usos** en los defaults de VS Code, así que esto no le quita nada.
+
+**Lo que deliberadamente NO se copia:** el `⌘D` / `⌘⇧D` de cmux para dividir paneles. En VS Code `⌘D` es
+*Add Selection To Next Find Match* — multicursor. Aunque uses el editor sobre todo para leer, quitarte en
+silencio uno de los atajos más interiorizados que existe es peor que un hueco en la gramática. `⌘\` sigue
+dividiendo, y la inconsistencia queda documentada en vez de sorprenderte justo cuando alargas la mano.
+
+### Y una tecla que cambió
+
 El terminal está en `✦Y` y no en `` ✦` `` porque el backtick **no disparaba**. La causa no está
 confirmada: la teoría obvia (⌥\` es la tecla muerta del acento grave) no se sostiene, porque ⌥E es la del
 acento agudo y `✦E` sí funciona — o sea que ⌘ suprime la composición. Puede ser que ⌘\` siga reclamado

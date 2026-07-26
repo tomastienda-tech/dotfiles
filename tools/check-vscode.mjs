@@ -164,7 +164,12 @@ if (badHex.length) {
     }
 
     const cmds = [...new Set(kb.map((b) => b.command))];
-    const deadCmds = cmds.filter((c) => !corpus.includes(`"${c}"`));
+    // Some commands are registered in a loop with the index appended, so the
+    // numbered id never appears as a literal in the bundle. Match the base.
+    const GENERATED = [/^workbench\.action\.openEditorAtIndex\d$/];
+    const deadCmds = cmds.filter(
+      (c) => !corpus.includes(`"${c}"`) && !GENERATED.some((re) => re.test(c)),
+    );
     if (deadCmds.length) bad(`command(s) that do not exist: ${deadCmds.join(', ')}`);
     else ok(`all ${cmds.length} bound commands exist`);
 
