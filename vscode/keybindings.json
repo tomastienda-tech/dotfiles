@@ -40,24 +40,59 @@
   },
 
   { "key": "ctrl+alt+cmd+o", "command": "workbench.action.quickOpen" },
-  { "key": "ctrl+alt+cmd+m", "command": "workbench.actions.view.problems" },
 
+  // Terminal is ✦Y, not ✦`, because ✦` did not fire on a US layout.
+  //
+  // Cause NOT established. The obvious theory — ⌥` is the dead key for a grave
+  // accent — does not hold up, since ⌥E is the acute-accent dead key and ✦E
+  // works fine, so ⌘ evidently suppresses composition. Other candidates are
+  // ⌘` being a standard Cocoa window-cycling shortcut that the app menu still
+  // claims, or VS Code's parsing of the backquote token. Not worth chasing:
+  // a letter avoids the whole class of problem, and VS Code's own ⌃` still
+  // works for the terminal and involves no Option at all.
   {
-    "key": "ctrl+alt+cmd+`",
+    "key": "ctrl+alt+cmd+y",
     "command": "workbench.action.terminal.toggleTerminal",
     "when": "!terminalFocus"
   },
   {
-    "key": "ctrl+alt+cmd+`",
+    "key": "ctrl+alt+cmd+y",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "terminalFocus"
   },
 
-  // Reviewing a diff is most of what this editor is for.
-  { "key": "ctrl+alt+cmd+d", "command": "workbench.action.editor.nextChange" },
-  { "key": "ctrl+alt+cmd+shift+d", "command": "workbench.action.editor.previousChange" },
+  // Diff navigation, in BOTH places a change can appear.
+  //
+  // workbench.action.editor.nextChange alone was the earlier mistake: it is
+  // gated on the quick-diff provider, so it only moves between UNCOMMITTED
+  // changes in a normal editor. Open a side-by-side diff — reviewing a PR,
+  // which is most of what this editor is for — and it does nothing at all,
+  // which is indistinguishable from a broken binding.
+  {
+    "key": "ctrl+alt+cmd+d",
+    "command": "workbench.action.compareEditor.nextChange",
+    "when": "isInDiffEditor"
+  },
+  {
+    "key": "ctrl+alt+cmd+d",
+    "command": "editor.action.dirtydiff.next",
+    "when": "!isInDiffEditor"
+  },
+  {
+    "key": "ctrl+alt+cmd+shift+d",
+    "command": "workbench.action.compareEditor.previousChange",
+    "when": "isInDiffEditor"
+  },
+  {
+    "key": "ctrl+alt+cmd+shift+d",
+    "command": "editor.action.dirtydiff.previous",
+    "when": "!isInDiffEditor"
+  },
 
-  { "key": "ctrl+alt+cmd+u", "command": "workbench.action.toggleZenMode" },
+  // Zen moves from ✦U to ✦M, and Problems loses its key entirely: for an
+  // editor used to read code, a diagnostics panel does not earn a Hyper slot,
+  // and ⌘⇧M still opens it.
+  { "key": "ctrl+alt+cmd+m", "command": "workbench.action.toggleZenMode" },
 
   // Escape leaves the terminal without needing the mouse. Vim's own Escape
   // still works inside the editor — this only applies with the terminal

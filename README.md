@@ -159,10 +159,15 @@ vista, te devuelve al editor.
 | `✦E` | explorador |
 | `✦G` | git (SCM) |
 | `✦O` | abrir archivo |
-| `✦M` | problemas |
-| `` ✦` `` | terminal |
+| `✦Y` | terminal |
 | `✦D` / `✦⇧D` | siguiente / anterior cambio |
-| `✦U` | zen mode |
+| `✦M` | zen mode |
+
+El terminal está en `✦Y` y no en `` ✦` `` porque el backtick **no disparaba**. La causa no está
+confirmada: la teoría obvia (⌥\` es la tecla muerta del acento grave) no se sostiene, porque ⌥E es la del
+acento agudo y `✦E` sí funciona — o sea que ⌘ suprime la composición. Puede ser que ⌘\` siga reclamado
+como atajo estándar de ciclado de ventanas. No merecía perseguirlo: una letra evita toda esa clase de
+problema, y el `` ⌃` `` nativo de VS Code sigue funcionando y no usa Option.
 
 La elección de letras **no es estética**: AeroSpace ata `b f h j k l n p q r t`, dígitos, flechas y
 `= ; [ ]` como hotkeys **globales**, así que nunca llegan a VS Code. Karabiner se queda `a c v x z s w`.
@@ -179,6 +184,11 @@ diffs — porque los verbos de edición ya son de vim y no necesitan remapeo.
 `<space>` + `e` explorador · `g` git · `f` buscar archivo · `/` buscar en archivos · `d` definición ·
 `r` referencias · `h`/`H` cambio siguiente/anterior · `z` zen · `w` guardar · `q` cerrar · `n` quitar
 resaltado de búsqueda.
+
+La navegación de diffs (`✦D`) atiende a **los dos sitios** donde aparece un cambio. Atarla solo a
+`workbench.action.editor.nextChange` fue el error inicial: ese comando está condicionado al proveedor de
+quick-diff, así que solo salta entre cambios **sin commitear** en un editor normal. Abres un diff lado a
+lado —revisar un PR, que es para lo que más usas esto— y no hacía absolutamente nada.
 
 **La barra de estado se tiñe según el modo**, con la paleta: gris en normal, acento al insertar, teal al
 seleccionar, y **rojo en replace** — el único modo que sobrescribe en silencio. Es un ranking por daño
