@@ -43,6 +43,9 @@ MAP=(
   "dir:pi/themes:$HOME/.pi/agent/themes"
   "dir:pi/prompts:$HOME/.pi/agent/prompts"
   "file:tools/cmux-dock-hook.sh:$HOME/.config/cmux/dock-hook.sh"
+  # VS Code settings live outside ~/.config, and the whole palette is in here
+  # via colorCustomizations rather than as a theme extension.
+  "file:vscode/settings.json:$HOME/Library/Application Support/Code/User/settings.json"
 )
 
 # ── Back up whatever is already there ───────────────────────────────────────

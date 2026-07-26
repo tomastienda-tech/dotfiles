@@ -70,7 +70,7 @@ outer.right = 4
 # ───────────────────────────────────────────────────────────────────────────
 alt-cmd-ctrl-1 = ['workspace B', 'exec-and-forget open -a "Google Chrome"']
 alt-cmd-ctrl-2 = ['workspace T', 'exec-and-forget open -a "cmux"']
-alt-cmd-ctrl-3 = ['workspace C', 'exec-and-forget open -a "Cursor"']
+alt-cmd-ctrl-3 = ['workspace C', 'exec-and-forget open -a "Visual Studio Code"']
 alt-cmd-ctrl-4 = ['workspace X', 'exec-and-forget open -a "Codex"']
 alt-cmd-ctrl-5 = ['workspace K', 'exec-and-forget open -a "Claude"']
 alt-cmd-ctrl-6 = ['workspace M', 'exec-and-forget open -a "Microsoft Teams"']

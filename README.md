@@ -32,6 +32,7 @@ El acento responde a *dónde estoy / qué está activo*. Verde, ámbar, rojo y t
 | `pi/` | Tema iris y extensiones globales |
 | `sketchybar/` | Barra de estado |
 | `wallpapers/` | Fondos generados, dark y light |
+| `vscode/` | Ajustes de VS Code (**generado**), tema Iris incluido |
 | `zsh/` | Shell + prompt Powerlevel10k |
 
 ## Los colores son generados, no escritos a mano
@@ -40,7 +41,8 @@ El acento responde a *dónde estoy / qué está activo*. Verde, ámbar, rojo y t
 
 ```
 pi/themes/iris.json      ghostty/themes/iris      cmux/cmux.json
-sketchybar/colors.sh     borders/bordersrc
+sketchybar/colors.sh     borders/bordersrc        vscode/settings.json
+swift/CmuxDock/Sources/IrisTokens.swift
 ```
 
 Esos archivos llevan cabecera `GENERATED`. **No los edites a mano**: se sobreescriben. Para
@@ -127,6 +129,23 @@ Depuración:
 log stream --predicate 'process == "CmuxDock"'
 cat ~/.cmux/dock-probe.log
 ```
+
+## VS Code
+
+Minimalista a propósito: se queda con lo que usas — archivos, git y terminal — y se quita lo demás
+(minimapa, breadcrumbs, sticky scroll, lightbulb, resaltado de ocurrencias, barra de actividad al lado).
+
+**El tema va dentro de `settings.json`, no como extensión.** Un repo de dotfiles no debería depender de una
+extensión publicada para verse bien, y así se genera desde los mismos tokens que el resto: 105 claves de
+`workbench.colorCustomizations` más las reglas de sintaxis, con la misma jerarquía que el tema de pi y la
+misma paleta ANSI de 16 colores que Ghostty, para que una shell sea la misma shell se abra donde se abra.
+
+El historial de git usa la vista SCM y el Timeline integrados — sin extensiones. Si algún día quieres el
+`git blame` inline y el grafo completo, GitLens es la de siempre, pero ahora mismo tienes **cero
+extensiones instaladas** y no he añadido ninguna.
+
+La tipografía es la misma que el terminal (JetBrainsMono Nerd Font, interlineado 1.6) para que pasar del
+editor a una sesión de pi no sea un cambio de tipografía.
 
 ## Aplicar cambios en caliente
 

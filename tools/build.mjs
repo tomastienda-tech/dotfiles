@@ -432,6 +432,218 @@ emit('cmux/cmux.json', JSON.stringify(cmux, null, 2) + '\n');
 // Rendered by tools/wallpaper.mjs, not here: this machine has no working SVG
 // rasteriser, so the wallpapers are drawn pixel-by-pixel instead.
 
+// ── VS Code ─────────────────────────────────────────────────────────────────
+// The whole palette goes into settings.json via colorCustomizations rather
+// than being packaged as a theme extension: a dotfiles repo should not need a
+// published extension to look right, and this way it is generated from the
+// same tokens as everything else.
+//
+// Verified against VS Code 1.127.0.
+const vscode = {
+  // ── Minimal chrome ────────────────────────────────────────────────────
+  // Keep what the user actually asked for — files, git, terminal — and drop
+  // the rest. Every item below is something removed or quieted, not a
+  // preference sprinkled on top.
+  'workbench.activityBar.location': 'top',
+  'workbench.statusBar.visible': true,
+  'workbench.editor.showTabs': 'multiple',
+  'workbench.editor.tabSizing': 'shrink',
+  'workbench.tree.indent': 14,
+  'workbench.tree.renderIndentGuides': 'always',
+  'workbench.list.smoothScrolling': true,
+  'workbench.editor.empty.hint': 'hidden',
+  'workbench.startupEditor': 'none',
+  'breadcrumbs.enabled': false,
+  'editor.minimap.enabled': false,
+  'editor.glyphMargin': false,
+  'editor.overviewRulerBorder': false,
+  'editor.hideCursorInOverviewRuler': true,
+  'editor.renderLineHighlight': 'line',
+  'editor.occurrencesHighlight': 'off',
+  'editor.selectionHighlight': false,
+  'editor.lightbulb.enabled': 'off',
+  'editor.stickyScroll.enabled': false,
+  'window.titleBarStyle': 'custom',
+  'window.commandCenter': false,
+  'window.title': '${rootName}${separator}${activeEditorShort}',
+
+  // ── Type ──────────────────────────────────────────────────────────────
+  // Same face and the same 10% extra leading as the terminal, so moving
+  // between the editor and a pi session is not a change of typography.
+  'editor.fontFamily': '"JetBrainsMono Nerd Font", Menlo, monospace',
+  'editor.fontSize': 13,
+  'editor.lineHeight': 1.6,
+  'editor.fontLigatures': true,
+  'terminal.integrated.fontFamily': '"JetBrainsMono Nerd Font"',
+  'terminal.integrated.fontSize': 13,
+  'terminal.integrated.lineHeight': 1.1,
+  'terminal.integrated.cursorStyle': 'block',
+  'terminal.integrated.cursorBlinking': false,
+
+  // ── Git ───────────────────────────────────────────────────────────────
+  // The built-in SCM view and Timeline cover history without an extension.
+  'scm.diffDecorations': 'all',
+  'scm.showHistoryGraph': true,
+  'git.decorations.enabled': true,
+  'git.autofetch': true,
+  'git.confirmSync': false,
+  'timeline.pageSize': 50,
+  'diffEditor.ignoreTrimWhitespace': false,
+  'diffEditor.renderSideBySide': true,
+
+  'explorer.compactFolders': false,
+  'explorer.confirmDelete': true,
+  'files.trimTrailingWhitespace': true,
+  'files.insertFinalNewline': true,
+
+  // ── Iris ──────────────────────────────────────────────────────────────
+  'workbench.colorCustomizations': {
+    focusBorder: accent.base,
+    'selection.background': accent.wash,
+
+    'editor.background': ink[0],
+    'editor.foreground': ink[8],
+    'editorCursor.foreground': accent.base,
+    'editor.selectionBackground': accent.wash,
+    'editor.lineHighlightBackground': ink[1],
+    'editorLineNumber.foreground': ink[5],
+    'editorLineNumber.activeForeground': accent.base,
+    'editorIndentGuide.background1': ink[2],
+    'editorIndentGuide.activeBackground1': ink[4],
+    'editorWhitespace.foreground': ink[2],
+    'editorWidget.background': ink[2],
+    'editorWidget.border': ink[4],
+    'editorHoverWidget.background': ink[2],
+    'editorSuggestWidget.background': ink[2],
+    'editorSuggestWidget.selectedBackground': ink[3],
+    'editorBracketMatch.background': accent.wash,
+    'editorBracketMatch.border': accent.deep,
+
+    'sideBar.background': ink[1],
+    'sideBar.foreground': ink[7],
+    'sideBar.border': ink[2],
+    'sideBarSectionHeader.background': ink[1],
+    'sideBarSectionHeader.foreground': ink[6],
+    'sideBarTitle.foreground': ink[6],
+
+    'activityBar.background': ink[1],
+    'activityBar.foreground': ink[8],
+    'activityBar.inactiveForeground': ink[5],
+    'activityBar.border': ink[2],
+    'activityBarBadge.background': accent.base,
+    'activityBarBadge.foreground': ink[0],
+
+    'titleBar.activeBackground': ink[1],
+    'titleBar.activeForeground': ink[7],
+    'titleBar.inactiveBackground': ink[1],
+    'titleBar.inactiveForeground': ink[5],
+    'titleBar.border': ink[2],
+
+    'statusBar.background': ink[1],
+    'statusBar.foreground': ink[7],
+    'statusBar.border': ink[2],
+    'statusBar.noFolderBackground': ink[1],
+    // Debugging is a MODE, not an identity — it gets a state colour, and the
+    // accent stays reserved for focus.
+    'statusBar.debuggingBackground': state.warning,
+    'statusBar.debuggingForeground': ink[0],
+    'statusBarItem.remoteBackground': ink[2],
+    'statusBarItem.remoteForeground': ink[7],
+
+    'tab.activeBackground': ink[0],
+    'tab.activeForeground': ink[9],
+    'tab.inactiveBackground': ink[1],
+    'tab.inactiveForeground': ink[6],
+    'tab.border': ink[2],
+    'tab.activeBorderTop': accent.base,
+    'tab.unfocusedActiveBorderTop': ink[4],
+    'editorGroupHeader.tabsBackground': ink[1],
+    'editorGroupHeader.tabsBorder': ink[2],
+    'editorGroup.border': ink[2],
+
+    'panel.background': ink[0],
+    'panel.border': ink[2],
+    'panelTitle.activeForeground': ink[8],
+    'panelTitle.inactiveForeground': ink[6],
+    'panelTitle.activeBorder': accent.base,
+
+    'list.activeSelectionBackground': accent.wash,
+    'list.activeSelectionForeground': ink[9],
+    'list.inactiveSelectionBackground': ink[2],
+    'list.hoverBackground': ink[2],
+    'list.focusOutline': accent.base,
+
+    'input.background': ink[2],
+    'input.border': ink[4],
+    'inputOption.activeBorder': accent.base,
+    'quickInput.background': ink[2],
+    'quickInputList.focusBackground': accent.wash,
+
+    'scrollbarSlider.background': `${ink[4]}80`,
+    'scrollbarSlider.hoverBackground': `${ink[5]}b0`,
+    'scrollbarSlider.activeBackground': `${ink[5]}ff`,
+
+    // Git: status colours, never the accent.
+    'gitDecoration.modifiedResourceForeground': state.warning,
+    'gitDecoration.addedResourceForeground': state.success,
+    'gitDecoration.deletedResourceForeground': state.error,
+    'gitDecoration.untrackedResourceForeground': state.special,
+    'gitDecoration.ignoredResourceForeground': ink[5],
+    'gitDecoration.conflictingResourceForeground': state.error,
+    'editorGutter.addedBackground': state.success,
+    'editorGutter.modifiedBackground': state.warning,
+    'editorGutter.deletedBackground': state.error,
+    'diffEditor.insertedTextBackground': `${state.success}22`,
+    'diffEditor.removedTextBackground': `${state.error}22`,
+
+    'editorError.foreground': state.error,
+    'editorWarning.foreground': state.warning,
+    'editorInfo.foreground': state.info,
+
+    // Terminal: the same ANSI palette as Ghostty, so a shell is a shell
+    // wherever it is opened.
+    'terminal.background': ink[0],
+    'terminal.foreground': ink[8],
+    'terminalCursor.foreground': accent.base,
+    'terminal.ansiBlack': ansi.black,
+    'terminal.ansiRed': ansi.red,
+    'terminal.ansiGreen': ansi.green,
+    'terminal.ansiYellow': ansi.yellow,
+    'terminal.ansiBlue': ansi.blue,
+    'terminal.ansiMagenta': ansi.magenta,
+    'terminal.ansiCyan': ansi.cyan,
+    'terminal.ansiWhite': ansi.white,
+    'terminal.ansiBrightBlack': ansi.brightBlack,
+    'terminal.ansiBrightRed': ansi.brightRed,
+    'terminal.ansiBrightGreen': ansi.brightGreen,
+    'terminal.ansiBrightYellow': ansi.brightYellow,
+    'terminal.ansiBrightBlue': ansi.brightBlue,
+    'terminal.ansiBrightMagenta': ansi.brightMagenta,
+    'terminal.ansiBrightCyan': ansi.brightCyan,
+    'terminal.ansiBrightWhite': ansi.brightWhite,
+  },
+
+  // Same syntax hierarchy as the pi theme: what you skim past is dimmest,
+  // what carries structure is brightest.
+  'editor.tokenColorCustomizations': {
+    textMateRules: [
+      { scope: ['comment', 'punctuation.definition.comment'], settings: { foreground: ink[6], fontStyle: 'italic' } },
+      { scope: ['keyword', 'storage', 'keyword.control'], settings: { foreground: state.special } },
+      { scope: ['entity.name.function', 'support.function', 'meta.function-call'], settings: { foreground: accent.base } },
+      { scope: ['variable', 'meta.definition.variable.name'], settings: { foreground: ink[8] } },
+      { scope: ['string', 'punctuation.definition.string'], settings: { foreground: state.success } },
+      { scope: ['constant.numeric', 'constant.language'], settings: { foreground: state.warning } },
+      { scope: ['entity.name.type', 'support.type', 'support.class'], settings: { foreground: ansi.cyan } },
+      { scope: ['keyword.operator'], settings: { foreground: accent.dim } },
+      { scope: ['punctuation'], settings: { foreground: ink[7] } },
+      { scope: ['entity.name.tag'], settings: { foreground: state.special } },
+      { scope: ['entity.other.attribute-name'], settings: { foreground: state.warning } },
+      { scope: ['invalid'], settings: { foreground: state.error } },
+    ],
+  },
+};
+emit('vscode/settings.json', JSON.stringify(vscode, null, 2) + '\n');
+
 // ── write / check ───────────────────────────────────────────────────────────
 let stale = 0;
 for (const { relPath, content } of out) {
@@ -455,3 +667,4 @@ if (CHECK) {
   console.log(stale === 0 ? '\nPASS — generated files match tokens.' : `\nFAIL — ${stale} stale.`);
   process.exit(stale === 0 ? 0 : 1);
 }
+
