@@ -232,6 +232,29 @@ extensiones instaladas** y no he añadido ninguna.
 La tipografía es la misma que el terminal (JetBrainsMono Nerd Font, interlineado 1.6) para que pasar del
 editor a una sesión de pi no sea un cambio de tipografía.
 
+## `/side` — forkear la sesión a un panel de al lado
+
+Para la conversación de "espera, déjame comprobar una cosa": mismo contexto, hilo aparte, sin perder el
+sitio en este.
+
+Son **tres pasos** porque ningún comando lo hace entero:
+
+1. pi — `sessionManager.getSessionFile()` da el archivo en disco
+2. cmux — `new-pane` crea el split, pero **no acepta un comando**
+3. cmux — `send` escribe `pi --fork <archivo>` en la superficie nueva
+
+`pi --fork` está verificado: crea un archivo **nuevo**, deja el original intacto, y la cabecera guarda
+`parentSession` apuntando al origen. `--name` también funciona — aparece como entrada `session_info`.
+
+El paso 3 no tiene señal de "shell listo", así que en vez de adivinar un retardo, sondea `read-screen`
+hasta ver un prompt. Y si no estás dentro de cmux el comando **se niega** en vez de dejarte un panel a
+medias, porque `socketControlMode: cmuxOnly` solo acepta conexiones desde dentro.
+
+```
+/side                        forkea y abre al lado
+/side por qué falla el CI    forkea y arranca con esa pregunta
+```
+
 ## Todas las teclas en un sitio
 
 [`docs/KEYMAP.md`](docs/KEYMAP.md) es **generado** desde las seis configuraciones que atan teclas aquí, y

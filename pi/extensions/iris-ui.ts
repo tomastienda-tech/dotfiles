@@ -25,6 +25,7 @@ const SESSION_ACTIONS: ReadonlyArray<readonly [string, string]> = [
 ];
 
 const COMMANDS: ReadonlyArray<readonly [string, string]> = [
+	["/side", "fork beside this"],
 	["/palette", "theme colours"],
 	["/gauge", "context detail"],
 	["/review", "review staged"],
