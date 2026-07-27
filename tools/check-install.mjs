@@ -44,8 +44,11 @@ const covered = new Set(entries.map((e) => e.src));
 // Directories the repo ships that are NOT configs to install.
 // vendor/ holds upstream reference data (cmux's published shortcut list) that
 // tools/keymap.mjs reads. It is not configuration and has no install target.
+// node_modules is a local symlink farm so tools/check-widths.mjs can import
+// the same pi-tui the extensions do; it is gitignored and never installed.
 const NOT_CONFIG = new Set([
-  'tools', 'docs', 'wallpapers', 'swift', 'backups', 'vendor', '.git', '.github',
+  'tools', 'docs', 'wallpapers', 'swift', 'backups', 'vendor', 'node_modules',
+  '.git', '.github',
 ]);
 
 const isCovered = (p) => {
