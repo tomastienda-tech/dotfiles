@@ -463,8 +463,19 @@ const vscode = {
   'workbench.navigationControl.enabled': false,
   'workbench.editor.editorActionsLocation': 'hidden',
 
-  // Agent UI off. Agents run in pi, in a terminal — a second agent surface
-  // inside the viewer is the thing being avoided, not a feature.
+  // Chat off entirely. Agents run in pi, in a terminal — a second agent
+  // surface inside the viewer is the thing being avoided, not a feature.
+  //
+  // chat.disableAIFeatures is the real switch, and the only one that does this.
+  // In VS Code 1.127 the chat entitlement context reads it directly:
+  //     CHAT_DISABLED_CONFIGURATION_KEY = "chat.disableAIFeatures"
+  //     withConfiguration(e) { return ...getValue(KEY) === true
+  //         ? { ...e, hidden: true } : e }
+  // so setting it marks the whole chat surface hidden rather than merely
+  // restricting what it can do.
+  'chat.disableAIFeatures': true,
+  // Kept as a second layer: this one alone was NOT enough — it only turns off
+  // agent mode, leaving the chat panel and its activity-bar entry in place.
   'chat.agent.enabled': false,
 
   'workbench.statusBar.visible': true,

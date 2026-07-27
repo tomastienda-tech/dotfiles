@@ -140,8 +140,13 @@ El código se escribe en pi dentro de cmux, así que la disposición está pensa
 - **Iconos arriba, sobre esa sidebar** — no ocultos del todo: sin barra de actividad, Explorer y SCM pasan a
   ser solo-teclado, y eso es peor trato para algo que usas constantemente.
 - **Panel secundario cerrado** — es donde vive el Chat en 1.127.
-- **`chat.agent.enabled: false`.** Los agentes corren en pi, en un terminal. Una segunda superficie de
-  agentes dentro del visor es justo lo que se está evitando.
+- **Chat desactivado del todo** con `chat.disableAIFeatures: true`. Los agentes corren en pi, en un
+  terminal; una segunda superficie de agentes dentro del visor es justo lo que se evita.
+
+  Esa es la palanca **real**, y la única que lo hace. En 1.127 el contexto de *chat entitlement* la lee
+  directamente y marca toda la superficie como `hidden`. `chat.agent.enabled: false` —que es lo que había
+  antes— **no bastaba**: solo apaga el modo agente y te deja el panel y su icono en la barra. Se conserva
+  como segunda capa.
 - **Barra de título desnuda**: sin command center, sin controles de layout, sin acciones de editor.
 - **Pestañas en modo preview, máximo 8.** Click simple en el árbol es *leer*, y no debería dejar veinte
   pestañas fijadas detrás.
