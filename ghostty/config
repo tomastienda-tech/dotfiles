@@ -120,17 +120,23 @@ keybind = shift+down=unbind
 # `super+shift+,`=reload_config — both triggers persist in 1.3.1. Open-config
 # is bound to super+shift+period instead so the two cannot shadow each other.
 keybind = super+shift+period=open_config
-keybind = super+shift+r=reload_config
-
-# Font size
-keybind = super+equal=increase_font_size:1
-keybind = super+minus=decrease_font_size:1
-keybind = super+0=reset_font_size
 
 # Clear
 keybind = super+k=clear_screen
 
-# Quick commands (sent to the shell)
-keybind = super+shift+g=text:lazygit\n
-keybind = super+shift+f=text:yazi\n
-keybind = super+shift+h=text:btop\n
+# Quick commands (sent to the shell).
+#
+# On ⌥⌘, not ⇧⌘, because cmux claims ⇧⌘G ⇧⌘F ⇧⌘H for grouping workspaces,
+# find-in-directory and flashing a panel. Inside cmux — which is where this
+# terminal actually runs — those three bindings never fired. Found by
+# tools/keymap.mjs, which cross-references every layer.
+keybind = super+alt+l=text:lazygit\n
+keybind = super+alt+y=text:yazi\n
+keybind = super+alt+p=text:btop\n
+
+# REMOVED, because cmux already owns the combination AND provides the same
+# thing, so re-binding them here only produced dead config:
+#   super+shift+r  reload_config      → cmux ⌘⇧, reloads Ghostty AND cmux
+#   super+equal    increase_font_size → cmux ⌘= zoom in
+#   super+minus    decrease_font_size → cmux ⌘- zoom out
+#   super+0        reset_font_size    → cmux ⌘0 actual size

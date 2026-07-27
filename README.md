@@ -32,6 +32,7 @@ El acento responde a *dónde estoy / qué está activo*. Verde, ámbar, rojo y t
 | `pi/` | Tema iris y extensiones globales |
 | `sketchybar/` | Barra de estado |
 | `wallpapers/` | Fondos generados, dark y light |
+| `vendor/` | Datos de referencia de terceros (atajos publicados de cmux) |
 | `vscode/` | Ajustes de VS Code (**generado**), tema Iris incluido |
 | `zsh/` | Shell + prompt Powerlevel10k |
 
@@ -231,6 +232,24 @@ extensiones instaladas** y no he añadido ninguna.
 La tipografía es la misma que el terminal (JetBrainsMono Nerd Font, interlineado 1.6) para que pasar del
 editor a una sesión de pi no sea un cambio de tipografía.
 
+## Todas las teclas en un sitio
+
+[`docs/KEYMAP.md`](docs/KEYMAP.md) es **generado** desde las seis configuraciones que atan teclas aquí, y
+se regenera con `node tools/keymap.mjs`. Una tabla escrita a mano se desincroniza el primer día.
+
+Lo valioso no es la lista: es la **detección de conflictos**. Las teclas se entregan de arriba abajo
+—Karabiner, AeroSpace, la app en primer plano, la superficie del terminal, el TUI— y quien la reclama
+primero se la queda. Un binding en una capa inferior cuya combinación ya está tomada arriba **está muerto**:
+parece configurado, valida bien, y no se ejecuta nunca.
+
+La primera pasada encontró **ocho**, y siete eran de esta misma configuración: `⇧⌘G/F/H` para
+lazygit/yazi/btop los reclama cmux, y `⇧⌘R` `⌘=` `⌘-` `⌘0` estaban duplicando cosas que cmux ya hace. Los
+tres primeros se movieron a `⌥⌘L/Y/P`; los otros cuatro se borraron por redundantes.
+
+Los bindings **modales** (el service mode de AeroSpace, el vim-mode de Karabiner) y los **locales a una
+vista** (visor de diffs de cmux, filas de la barra lateral) se registran pero no cuentan como conflicto:
+no reclaman la tecla globalmente.
+
 ## Aplicar cambios en caliente
 
 ```bash
@@ -274,6 +293,7 @@ al repo, añádelo en los dos sitios — `tools/check-install.mjs` te avisa del 
 ## Validación
 
 ```bash
+node tools/keymap.mjs --check                                    # teclas: ¿algún binding queda a la sombra?
 node tools/check-contrast.mjs                                    # contraste y separación semántica
 node tools/check-install.mjs                                     # ¿instala todo lo que el repo trae?
 node tools/check-pi.mjs                                          # tema, teclas y ajustes de pi

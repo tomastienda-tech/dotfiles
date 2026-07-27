@@ -42,7 +42,11 @@ const covered = new Set(entries.map((e) => e.src));
 
 // ── Every shipped config must be covered ────────────────────────────────────
 // Directories the repo ships that are NOT configs to install.
-const NOT_CONFIG = new Set(['tools', 'docs', 'wallpapers', 'swift', 'backups', '.git', '.github']);
+// vendor/ holds upstream reference data (cmux's published shortcut list) that
+// tools/keymap.mjs reads. It is not configuration and has no install target.
+const NOT_CONFIG = new Set([
+  'tools', 'docs', 'wallpapers', 'swift', 'backups', 'vendor', '.git', '.github',
+]);
 
 const isCovered = (p) => {
   if (covered.has(p)) return true;
