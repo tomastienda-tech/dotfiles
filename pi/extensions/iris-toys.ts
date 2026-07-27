@@ -1,4 +1,22 @@
 import type { ExtensionAPI, ExtensionContext, ThemeColor } from "@earendil-works/pi-coding-agent";
+import { truncateToWidth } from "@earendil-works/pi-tui";
+
+/**
+ * Show fixed lines as a widget WITHOUT risking the TUI.
+ *
+ * setWidget also accepts a plain string[], but a static array cannot know the
+ * terminal width, and pi hard-crashes on any rendered line wider than the
+ * terminal — that is exactly how the state widget took the whole session down.
+ * A factory receives the width, so every line can be clamped.
+ */
+function staticWidget(lines: string[]) {
+	return () => ({
+		invalidate() {},
+		render(width: number): string[] {
+			return lines.map((l) => truncateToWidth(l, width));
+		},
+	});
+}
 
 /**
  * Iris Toys — a live context gauge, plus two commands that draw things.
@@ -67,7 +85,7 @@ export default function (pi: ExtensionAPI) {
 				}
 				lines.push("");
 
-				cmdCtx.ui.setWidget("iris.palette", lines, { placement: "aboveEditor" });
+				cmdCtx.ui.setWidget("iris.palette", staticWidget(lines), { placement: "aboveEditor" });
 				// Transient by design: it is a look, not a permanent fixture.
 				setTimeout(() => cmdCtx.ui.setWidget("iris.palette", undefined), 12_000);
 			},
@@ -94,7 +112,7 @@ export default function (pi: ExtensionAPI) {
 					`  ${theme.fg(colour, `${usage.percent.toFixed(1)}%`)}` +
 					`  ${theme.fg("dim", `${usage.tokens ?? "?"} / ${usage.contextWindow}`)}` +
 					(note ? `  ${theme.fg(colour, note)}` : "");
-				cmdCtx.ui.setWidget("iris.palette", ["", line, ""], { placement: "aboveEditor" });
+				cmdCtx.ui.setWidget("iris.palette", staticWidget(["", line, ""]), { placement: "aboveEditor" });
 				setTimeout(() => cmdCtx.ui.setWidget("iris.palette", undefined), 10_000);
 			},
 		});

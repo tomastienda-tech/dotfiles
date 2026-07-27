@@ -5,3 +5,4 @@
 automatic_backups/
 .claude/
 swift/CmuxDock/dist/
+node_modules/

@@ -1,4 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { truncateToWidth } from "@earendil-works/pi-tui";
 
 /**
  * /keys — show the raw bytes of whatever key you press.
@@ -67,16 +68,22 @@ export default function (pi: ExtensionAPI) {
 
 				const seen: string[] = [];
 				const draw = () => {
-					cmdCtx.ui.setWidget(
-						"iris.keys",
-						[
+					// A factory, not a plain string[]: a static array cannot know the
+					// terminal width, and pi hard-crashes on any line wider than it.
+					const lines = [
 							"",
 							`  ${cmdCtx.ui.theme.fg("accent", "⌨  key probe")}  ${cmdCtx.ui.theme.fg("dim", "press keys · esc to finish · auto-stops in 30s")}`,
 							...(seen.length === 0
 								? [`  ${cmdCtx.ui.theme.fg("borderMuted", "nothing captured yet")}`]
 								: seen.slice(-8).map((s) => `  ${s}`)),
 							"",
-						],
+					];
+					cmdCtx.ui.setWidget(
+						"iris.keys",
+						() => ({
+							invalidate() {},
+							render: (w: number) => lines.map((l) => truncateToWidth(l, w)),
+						}),
 						{ placement: "aboveEditor" },
 					);
 				};

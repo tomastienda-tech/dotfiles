@@ -320,6 +320,7 @@ node tools/keymap.mjs --check                                    # teclas: ¿alg
 node tools/check-contrast.mjs                                    # contraste y separación semántica
 node tools/check-install.mjs                                     # ¿instala todo lo que el repo trae?
 node tools/check-pi.mjs                                          # tema, teclas y ajustes de pi
+node --experimental-strip-types tools/check-widths.mjs           # ningún widget de pi se desborda
 node tools/build.mjs --check                                     # ¿generados == tokens?
 /Applications/Ghostty.app/Contents/MacOS/ghostty +validate-config
 /Applications/cmux.app/Contents/MacOS/cmux config doctor

@@ -167,13 +167,27 @@ export default function (pi: ExtensionAPI) {
 						parts.push(`${t.fg(THINKING_DOT[level] ?? "dim", "●")} ${t.fg("muted", level)}`);
 					}
 					if (ctx.model?.id) parts.push(t.fg("dim", ctx.model.id));
-					const name = pi.getSessionName();
-					if (name) parts.push(t.fg("accent", name));
-					if (parts.length === 0) return [];
 
-					const line = parts.join(t.fg("borderMuted", " · "));
-					const pad = Math.max(0, width - visibleWidth(line) - 2);
-					return [" ".repeat(pad) + line];
+						// Session names can be enormous. An imported chat is named from
+						// its first line, which produced an 84-column widget on a
+						// 71-column terminal and took the whole TUI down with
+						// "Rendered line exceeds terminal width". Budget the name
+						// against the room actually left, and drop it when there is
+						// not enough space to say anything useful.
+						const name = pi.getSessionName();
+						if (name) {
+							const used = parts.reduce((n, p) => n + visibleWidth(p) + 3, 0);
+							const budget = width - used - 4;
+							if (budget >= 8) parts.push(t.fg("accent", truncateToWidth(name, budget)));
+						}
+						if (parts.length === 0) return [];
+
+						const line = parts.join(t.fg("borderMuted", " · "));
+						const pad = Math.max(0, width - visibleWidth(line) - 2);
+						// The backstop, not the plan: pad collapses to 0 once the
+						// content is already too wide, and returning it unclamped is
+						// exactly what crashed.
+						return [truncateToWidth(" ".repeat(pad) + line, width)];
 				},
 			}),
 			{ placement: "aboveEditor" },
@@ -213,9 +227,11 @@ export default function (pi: ExtensionAPI) {
 						.join(t.fg("borderMuted", " · "));
 
 					const gap = width - visibleWidth(gauge) - visibleWidth(hints) - 4;
-					// Drop the hints rather than wrapping or overlapping them.
-					if (gap < 3) return ["  " + gauge];
-					return ["  " + gauge + " ".repeat(gap) + hints];
+					// Drop the hints rather than wrapping or overlapping them, and
+					// clamp both branches: on a narrow split the gauge ALONE is
+					// wider than the pane, which is a crash, not a cosmetic issue.
+					if (gap < 3) return [truncateToWidth("  " + gauge, width)];
+					return [truncateToWidth("  " + gauge + " ".repeat(gap) + hints, width)];
 				},
 			}),
 			{ placement: "belowEditor" },
