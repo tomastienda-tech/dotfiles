@@ -65,26 +65,34 @@ outer.right = 4
 [mode.main.binding]
 
 # ───────────────────────────────────────────────────────────────────────────
-# LAUNCHERS (Hyper + número → workspace, y abrir la app solo si hace falta)
+# LAUNCHERS (Hyper + número → estás mirando la app, punto)
 # 1=Browser 2=Terminal 3=Code 4=Codex 5=Claude 6=Messages 7=WhatsApp 8=OrbStack 9=Docs
 #
-# launch.sh solo ejecuta `open -a` si la app NO tiene ninguna ventana. Sobre una
-# app ya abierta, `open -a` la activa — y si su ventana viviera en otro
-# workspace, macOS te seguiría hasta allí, deshaciendo el `workspace X` que
-# acaba de ejecutar la primera parte del binding.
+# El segundo argumento es el workspace de casa. NO hay un `workspace X` delante:
+# el script decide, porque el binding no sabe dónde está la ventana.
+#
+#   ventana en su workspace  → la enfoca
+#   ventana en otro sitio    → la enfoca ahí, sin moverla
+#   sin ventana              → va al workspace y lanza
+#
+# La versión anterior era ['workspace B', '…launch.sh Chrome'] y fallaba en el
+# caso de en medio: iba a un workspace fijo, el guard veía que ya había ventana
+# (en otro sitio), no lanzaba, y la tecla no hacía NADA. Medido con Chrome en el
+# workspace `2`. Las ventanas se salen de su regla porque on-window-detected
+# dispara una sola vez, al detectarlas, y nunca más.
 #
 # Va en un script y no inline porque la forma inline necesita tres niveles de
 # comillas anidadas y AeroSpace la rechaza con "Internal error".
 # ───────────────────────────────────────────────────────────────────────────
-alt-cmd-ctrl-1 = ['workspace B', "exec-and-forget $HOME/.config/aerospace/launch.sh 'Google Chrome'"]
-alt-cmd-ctrl-2 = ['workspace T', "exec-and-forget $HOME/.config/aerospace/launch.sh 'cmux'"]
-alt-cmd-ctrl-3 = ['workspace C', "exec-and-forget $HOME/.config/aerospace/launch.sh 'Visual Studio Code'"]
-alt-cmd-ctrl-4 = ['workspace X', "exec-and-forget $HOME/.config/aerospace/launch.sh 'Codex'"]
-alt-cmd-ctrl-5 = ['workspace K', "exec-and-forget $HOME/.config/aerospace/launch.sh 'Claude'"]
-alt-cmd-ctrl-6 = ['workspace M', "exec-and-forget $HOME/.config/aerospace/launch.sh 'Microsoft Teams'"]
-alt-cmd-ctrl-7 = ['workspace W', "exec-and-forget $HOME/.config/aerospace/launch.sh 'WhatsApp'"]
-alt-cmd-ctrl-8 = ['workspace O', "exec-and-forget $HOME/.config/aerospace/launch.sh 'OrbStack'"]
-alt-cmd-ctrl-9 = ['workspace D', "exec-and-forget $HOME/.config/aerospace/launch.sh 'Microsoft Word'"]
+alt-cmd-ctrl-1 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'Google Chrome' B"
+alt-cmd-ctrl-2 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'cmux' T"
+alt-cmd-ctrl-3 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'Visual Studio Code' C"
+alt-cmd-ctrl-4 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'Codex' X"
+alt-cmd-ctrl-5 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'Claude' K"
+alt-cmd-ctrl-6 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'Microsoft Teams' M"
+alt-cmd-ctrl-7 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'WhatsApp' W"
+alt-cmd-ctrl-8 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'OrbStack' O"
+alt-cmd-ctrl-9 = "exec-and-forget $HOME/.config/aerospace/launch.sh 'Microsoft Word' D"
 
 # ───────────────────────────────────────────────────────────────────────────
 # SCRATCH WORKSPACE (Hyper + 0)

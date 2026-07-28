@@ -134,11 +134,27 @@ cat ~/.cmux/dock-probe.log
 
 ## Los launchers no relanzan lo que ya está abierto
 
-`✦1`…`✦9` van al workspace y **solo abren la app si no tiene ninguna ventana**.
+`✦1`…`✦9` prometen una sola cosa: **al soltar la tecla estás mirando la app**. Tres casos, en orden:
 
-`open -a` sobre una app ya abierta la activa — y si su ventana viviera en otro workspace, macOS te seguiría
-hasta allí, **deshaciendo el `workspace X`** que acaba de ejecutar la primera mitad del binding. Con el
-guard el atajo es determinista: si hay algo que enfocar, solo cambia de workspace.
+| situación | qué hace |
+| --- | --- |
+| ventana en su workspace de casa | la enfoca |
+| ventana en otro workspace | la enfoca **ahí**, sin moverla |
+| sin ninguna ventana | va al workspace de casa y lanza |
+
+Los bindings **no** llevan un `workspace X` delante; el workspace va como segundo argumento y decide el
+script, porque el binding no sabe dónde está la ventana.
+
+Hicieron falta dos iteraciones. `open -a` sobre una app ya abierta la activa, y macOS sigue a la app hasta
+su ventana, arrastrándote al workspace donde viva y **deshaciendo el `workspace X`** que acababa de
+ejecutarse. Se añadió un guard para no relanzar cuando ya hay ventana — y eso **rompió el caso de en
+medio**: el binding iba a un workspace fijo, el guard veía la ventana en cualquier sitio, no lanzaba, y la
+tecla **no hacía nada**. Medido con Chrome en el workspace `2`.
+
+Las ventanas se salen de su sitio porque `on-window-detected` dispara **una sola vez, al detectarlas**:
+muévela a mano después y ahí se queda. Así que el launcher no puede dar por hecho dónde está — tiene que
+mirar. Y enfoca la ventana donde vive en lugar de recolocarla: una ventana que moviste tú a propósito no
+debería volver de un tirón por pulsar un atajo.
 
 El check es `aerospace list-windows`, **no `pgrep`**. Medido en esta máquina:
 `pgrep -f "/Applications/Visual Studio Code.app"` **da positivo con VS Code cerrado** (procesos helper
