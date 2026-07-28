@@ -24,6 +24,7 @@ El acento responde a *dónde estoy / qué está activo*. Verde, ámbar, rojo y t
 | `tools/` | Tokens de diseño, matemática de color, validador y generador |
 | `docs/` | Auditoría UX y sistema de diseño |
 | `.aerospace.toml` | Tiling window manager |
+| `aerospace/` | `launch.sh` — focus-or-launch de los atajos Hyper+número |
 | `borders/` | Anillo de foco de ventana (nivel 1 de 3) |
 | `cmux/` | Interfaz, paneles, sidebar y workspaces |
 | `ghostty/` | Terminal + `themes/iris` (generado) |
@@ -130,6 +131,23 @@ Depuración:
 log stream --predicate 'process == "CmuxDock"'
 cat ~/.cmux/dock-probe.log
 ```
+
+## Los launchers no relanzan lo que ya está abierto
+
+`✦1`…`✦9` van al workspace y **solo abren la app si no tiene ninguna ventana**.
+
+`open -a` sobre una app ya abierta la activa — y si su ventana viviera en otro workspace, macOS te seguiría
+hasta allí, **deshaciendo el `workspace X`** que acaba de ejecutar la primera mitad del binding. Con el
+guard el atajo es determinista: si hay algo que enfocar, solo cambia de workspace.
+
+El check es `aerospace list-windows`, **no `pgrep`**. Medido en esta máquina:
+`pgrep -f "/Applications/Visual Studio Code.app"` **da positivo con VS Code cerrado** (procesos helper
+residuales), lo que suprimiría el lanzamiento y dejaría la tecla muerta. Y la pregunta que importa no es
+"¿vive el proceso?" sino "¿hay una ventana que enfocar?" — una app con cero ventanas sigue necesitando
+`open -a`.
+
+Está en `aerospace/launch.sh` y no inline en el TOML porque la forma inline necesita tres niveles de
+comillas anidadas y AeroSpace la rechaza con `Internal error`.
 
 ## VS Code — modo foco
 

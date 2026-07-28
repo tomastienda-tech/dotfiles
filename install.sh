@@ -43,6 +43,8 @@ MAP=(
   "dir:pi/themes:$HOME/.pi/agent/themes"
   "dir:pi/prompts:$HOME/.pi/agent/prompts"
   "file:tools/cmux-dock-hook.sh:$HOME/.config/cmux/dock-hook.sh"
+  # Called by the AeroSpace launcher bindings, which reference it by $HOME path.
+  "file:aerospace/launch.sh:$HOME/.config/aerospace/launch.sh"
   # VS Code settings live outside ~/.config, and the whole palette is in here
   # via colorCustomizations rather than as a theme extension.
   "file:vscode/settings.json:$HOME/Library/Application Support/Code/User/settings.json"
@@ -87,6 +89,8 @@ done
 
 # The hook is executed by cmux, and a non-executable hook fails silently.
 $DRY || chmod +x "$HOME/.config/cmux/dock-hook.sh" 2>/dev/null || true
+# Same trap: AeroSpace runs this via bash and a non-executable script fails quietly.
+$DRY || chmod +x "$HOME/.config/aerospace/launch.sh" 2>/dev/null || true
 $DRY || chmod +x "$HOME/.config/sketchybar/"*.sh "$HOME/.config/sketchybar/plugins/"*.sh 2>/dev/null || true
 
 # ── Verify ──────────────────────────────────────────────────────────────────
