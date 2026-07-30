@@ -49,6 +49,12 @@ MAP=(
   # via colorCustomizations rather than as a theme extension.
   "file:vscode/settings.json:$HOME/Library/Application Support/Code/User/settings.json"
   "file:vscode/keybindings.json:$HOME/Library/Application Support/Code/User/keybindings.json"
+  # The keymap page, as an unpacked Chrome extension that overrides the New Tab.
+  #
+  # It goes to a stable path rather than being loaded from the repo, because
+  # "Load unpacked" stores the ABSOLUTE path forever: move or rename the repo and
+  # the extension breaks with no obvious cause. ~/.config never moves.
+  "dir:chrome/keymap:$HOME/.config/keymap"
 )
 
 # ── Back up whatever is already there ───────────────────────────────────────

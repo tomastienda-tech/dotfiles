@@ -26,6 +26,7 @@ El acento responde a *dónde estoy / qué está activo*. Verde, ámbar, rojo y t
 | `.aerospace.toml` | Tiling window manager |
 | `aerospace/` | `launch.sh` — focus-or-launch de los atajos Hyper+número |
 | `borders/` | Anillo de foco de ventana (nivel 1 de 3) |
+| `chrome/keymap/` | Extensión de Chrome: la New Tab es la lista de atajos (**generada**) |
 | `cmux/` | Interfaz, paneles, sidebar y workspaces |
 | `ghostty/` | Terminal + `themes/iris` (generado) |
 | `karabiner/` | Remapeo de teclado (sin cambios en este rediseño) |
@@ -307,6 +308,68 @@ Los bindings **modales** (el service mode de AeroSpace, el vim-mode de Karabiner
 vista** (visor de diffs de cmux, filas de la barra lateral) se registran pero no cuentan como conflicto:
 no reclaman la tecla globalmente.
 
+El parser cuenta **226** bindings. Contaba 267 hasta que se le añadió control de sección: leía cualquier
+línea `clave = valor` del TOML, así que `preset = 'qwerty'` de `[key-mapping]` aparecía como un atajo
+llamado `PRESET`, y los diez `run = 'move-node-to-workspace X'` de los bloques `[[on-window-detected]]`
+como diez atajos llamados `RUN`. **Un parser de configuración que no sabe dónde está se inventa bindings.**
+
+## La misma lista, en la New Tab del navegador
+
+`node tools/keymap.mjs` escribe también [`chrome/keymap/`](chrome/keymap/): una extensión de Chrome sin
+permisos que sustituye la New Tab por la lista completa, buscable. Un único fichero generado — no hay copia
+en `docs/`, porque dos copias de un fichero generado son deriva con pasos extra.
+
+```bash
+node tools/keymap.mjs && ./install.sh
+```
+
+Luego, una sola vez, en `chrome://extensions`: **Modo de desarrollador** → **Cargar descomprimida** →
+elegir `~/.config/keymap`.
+
+Se instala en `~/.config/keymap` y no se carga desde el repo porque «Cargar descomprimida» guarda la ruta
+**absoluta** para siempre: si el repo se mueve o se renombra, la extensión se rompe sin motivo aparente.
+
+### Por qué la New Tab y no la pantalla de arranque
+
+Este Chrome lo **gestiona el MDM de la empresa**. Hay un perfil de configuración en
+`/Library/Managed Preferences/com.google.Chrome.plist` (con `PayloadUUID`, propiedad de root) que fija
+`RestoreOnStartup = 1` — «restaurar la última sesión» — y `ShowHomeButton = false`. La política gana sobre
+cualquier preferencia de usuario, así que **la pantalla de arranque no se puede cambiar** desde aquí. Y
+`homepage`, `homepage_is_newtabpage` y `session` están protegidas por MAC en `Secure Preferences`: editarlas
+a mano hace que Chrome detecte manipulación y las revierta.
+
+Rodear una política del equipo no es una opción. La New Tab sí es libre (la política no fija
+`NewTabPageLocation` ni restringe extensiones), y de hecho se ve más veces al día.
+
+**Dos avisos honestos.** Chrome mantiene el foco en la barra de direcciones al abrir una pestaña nueva, así
+que hay que hacer clic en el buscador de la página o pulsar `/` después; eso es intencionado en Chrome y no
+tiene arreglo desde la página. Y abriendo `~/.config/keymap/index.html` directamente sí hay autofoco.
+
+### Lo que se validó midiendo, no mirando
+
+- **CSP de Manifest V3.** MV3 aplica `script-src 'self'` a las páginas de extensión: un `<script>` inline no
+  da error, simplemente **no se ejecuta**. La página se vería perfecta y el buscador no haría nada, sin un
+  mensaje en ningún sitio. De ahí que el JS salga a `keymap.js` y que `--check` rechace cualquier script
+  inline. Comprobado inyectando uno: el gate lo caza.
+- **Desbordamiento.** `minmax(330px, 1fr)` tiene un mínimo **duro** de 330px, así que por debajo de ese
+  ancho la columna desborda en vez de encogerse. Medido a 293px: el texto se cortaba. Con
+  `minmax(min(330px, 100%), 1fr)` el desbordamiento es **0px** de 280 a 1600, con 1→4 columnas.
+- **Búsqueda.** `hyper 2` no devolvía nada porque el índice solo tenía glifos; ahora cada modificador lleva
+  también sus nombres hablados. Y el match por substring era demasiado laxo — `cmd t` devolvía 160 de 225
+  filas, porque una «t» suelta casa dentro de `ctrl`, `option` y `shift`. Con prefijo por token son 40.
+- **Contraste.** Los pares que usa la página se miden en `--check`, no se suponen. Eso destapó que
+  `textDim` daba 4.24:1 para las descripciones de sección, por debajo del 4.5:1 de texto secundario, y que
+  **ningún** tono de borde de la paleta llega al 3:1 de WCAG 1.4.11 sobre superficies oscuras: de ahí el
+  token nuevo `borderStrong`, para el contorno de un control interactivo en reposo.
+- **El contador.** Decía «234 de 225». `list.map(rowHtml)` pasa el **índice** de `Array.map` como segundo
+  argumento, así que la marca de duplicado caía en todas las filas menos la primera de cada sección. Nada
+  fallaba, solo el número — así que ahora el número es lo que se comprueba.
+
+El icono es la marca `✦` **resuelta, no tipografiada**: es la superelipse `|x/r|^p + |y/r|^p ≤ 1` con
+`p = 0.55`, que hace los lados concavos y las puntas afiladas. Se dibuja en vez de renderizar el carácter
+para no depender de una fuente instalada ni de un rasterizador que en esta máquina no funciona, y para que
+salga de los mismos tokens que todo lo demás.
+
 ## Aplicar cambios en caliente
 
 ```bash
@@ -350,8 +413,9 @@ al repo, añádelo en los dos sitios — `tools/check-install.mjs` te avisa del 
 ## Validación
 
 ```bash
-node tools/keymap.mjs --check                                    # teclas: ¿algún binding queda a la sombra?
+node tools/keymap.mjs --check                                    # teclas a la sombra, y la extensión de Chrome
 node tools/check-contrast.mjs                                    # contraste y separación semántica
+node tools/check-vscode.mjs                                      # ¿existen los ajustes y comandos de VS Code?
 node tools/check-install.mjs                                     # ¿instala todo lo que el repo trae?
 node tools/check-pi.mjs                                          # tema, teclas y ajustes de pi
 node --experimental-strip-types tools/check-widths.mjs           # ningún widget de pi se desborda

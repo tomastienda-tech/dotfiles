@@ -147,6 +147,25 @@ export const semantic = {
   border: ink[5], //      pane dividers, float borders, inactive window edge
   borderFocus: accent.base, // focused pane, active window, focus ring
 
+  // The boundary of an INTERACTIVE component at rest — a text field, a button.
+  //
+  // Measured, because this was a surprise: on these dark surfaces neither
+  // `border` nor `borderMuted` can satisfy WCAG 1.4.11's 3:1 for non-text
+  // contrast. Against bgRaised they land at 2.47:1 and 1.65:1. ink[6] is the
+  // FIRST stop on the ramp that clears it (3.94:1), so that is what this is —
+  // not a value picked to look right.
+  //
+  // Quiet borders are correct in a terminal, where every edge competes with
+  // text you are reading and nothing on screen is a form control. They are not
+  // correct for a control the user has to find. So the two cases get two
+  // tokens instead of one token and a compromise.
+  //
+  // Decorative edges — section rules, the outline of a keycap — keep using
+  // `border`/`borderMuted`. 1.4.11 covers information needed to IDENTIFY a
+  // component or its state; the outline of a glyph-shaped ornament is neither,
+  // and the keycap's own text carries 10.36:1.
+  borderStrong: ink[6],
+
   textDim: ink[6], //     comments, timestamps, disabled, line numbers
   textMuted: ink[7], //   secondary text, labels, tool output, paths
   text: ink[8], //        body text

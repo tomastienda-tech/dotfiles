@@ -169,7 +169,14 @@ alt-cmd-ctrl-shift-rightSquareBracket = 'move-node-to-monitor --wrap-around next
 # QUICK ACTIONS
 # ───────────────────────────────────────────────────────────────────────────
 alt-cmd-ctrl-q = 'close'
-alt-cmd-ctrl-r = 'reload-config'
+# ✦⇧C, no ✦R. Karabiner reescribe ✦R → ⌃R (búsqueda de historial de atuin) a
+# nivel HID, así que AeroSpace nunca llega a ver esa tecla: el binding existía,
+# validaba y no podía dispararse jamás. Lo encontró `node tools/keymap.mjs`
+# comparando las seis capas; a ojo era invisible.
+#
+# ✦⇧R tampoco vale: cmux la usa para app.session.resume, y AeroSpace está por
+# encima de cmux, así que habría movido el conflicto en vez de resolverlo.
+alt-cmd-ctrl-shift-c = 'reload-config'
 alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 

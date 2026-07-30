@@ -21,11 +21,7 @@ keystroke:
 
 ## Shadowed bindings
 
-These are claimed by a layer above and **can never fire**.
-
-| combination | claimed by | shadowed |
-|---|---|---|
-| `⌃⌥⌘R` | **karabiner** — Hyper+R → Ctrl+R (atuin history search) | aerospace — reload-config |
+None. No binding is claimed by a layer above the one that defines it.
 
 ## karabiner — 15
 
@@ -35,10 +31,10 @@ These are claimed by a layer above and **can never fire**.
 | `⇧G` | Vim Mode: G → fin documento |
 | `⇧O` | Vim Mode: o/O → new line |
 | `⌃⌥⇧⌘Tab` | Hyper+Shift+Tab → Ctrl+Shift+Tab (pestaña anterior) |
+| `✦↩` | Vim Mode: Hyper+Enter → activa vim_mode |
 | `✦A` | Hyper shortcuts → Cmd shortcuts (a,c,v,x,z,s,w) |
 | `✦C` | Hyper shortcuts → Cmd shortcuts (a,c,v,x,z,s,w) |
 | `✦R` | Hyper+R → Ctrl+R (atuin history search) |
-| `✦RETURN_OR_ENTER` | Vim Mode: Hyper+Enter → activa vim_mode |
 | `✦S` | Hyper shortcuts → Cmd shortcuts (a,c,v,x,z,s,w) |
 | `✦Tab` | Hyper+Tab → Ctrl+Tab (cambio de pestañas) |
 | `✦V` | Hyper shortcuts → Cmd shortcuts (a,c,v,x,z,s,w) |
@@ -47,7 +43,7 @@ These are claimed by a layer above and **can never fire**.
 | `✦Z` | Hyper shortcuts → Cmd shortcuts (a,c,v,x,z,s,w) |
 | `⌃R` | Vim Mode: u → undo, Ctrl+r → redo |
 
-## aerospace — 99
+## aerospace — 58
 
 | key | action |
 |---|---|
@@ -65,6 +61,7 @@ These are claimed by a layer above and **can never fire**.
 | `⌃⌥⇧⌘7` | move-node-to-workspace W |
 | `⌃⌥⇧⌘8` | move-node-to-workspace O |
 | `⌃⌥⇧⌘9` | move-node-to-workspace D |
+| `⌃⌥⇧⌘C` | reload-config |
 | `⌃⌥⇧⌘H` | move left |
 | `⌃⌥⇧⌘J` | move down |
 | `⌃⌥⇧⌘K` | move up |
@@ -76,15 +73,15 @@ These are claimed by a layer above and **can never fire**.
 | `✦↓` | resize height -50 |
 | `✦=` | balance-sizes |
 | `✦0` | workspace S |
-| `✦1` | workspace B |
-| `✦2` | workspace T |
-| `✦3` | workspace C |
-| `✦4` | workspace X |
-| `✦5` | workspace K |
-| `✦6` | workspace M |
-| `✦7` | workspace W |
-| `✦8` | workspace O |
-| `✦9` | workspace D |
+| `✦1` | abrir Google Chrome · workspace B |
+| `✦2` | abrir cmux · workspace T |
+| `✦3` | abrir Visual Studio Code · workspace C |
+| `✦4` | abrir Codex · workspace X |
+| `✦5` | abrir Claude · workspace K |
+| `✦6` | abrir Microsoft Teams · workspace M |
+| `✦7` | abrir WhatsApp · workspace W |
+| `✦8` | abrir OrbStack · workspace O |
+| `✦9` | abrir Microsoft Word · workspace D |
 | `✦B` | balance-sizes |
 | `✦F` | fullscreen |
 | `✦H` | focus left |
@@ -94,32 +91,20 @@ These are claimed by a layer above and **can never fire**.
 | `✦N` | focus --boundaries workspace --boundaries-action wrap-around-the-workspace dfs-next |
 | `✦P` | focus --boundaries workspace --boundaries-action wrap-around-the-workspace dfs-prev |
 | `✦Q` | close |
-| `✦R` | reload-config |
 | `✦T` | layout floating tiling |
 | `⌥,` | layout accordion horizontal vertical |
 | `⌥/` | layout tiles horizontal vertical |
 | `⌥⇧Tab` | move-workspace-to-monitor --wrap-around next |
 | `⌥Tab` | workspace-back-and-forth |
+| `⌫` | [service] close-all-windows-but-current |
 | `B` | [service] balance-sizes |
-| `BACKSPACE` | [service] close-all-windows-but-current |
 | `Esc` | [service] reload-config |
 | `F` | [service] layout floating tiling |
 | `H` | [service] join-with left |
 | `J` | [service] join-with down |
 | `K` | [service] join-with up |
 | `L` | [service] join-with right |
-| `PRESET` | qwerty |
 | `R` | [service] flatten-workspace-tree |
-| `RUN` | [service] move-node-to-workspace B |
-| `RUN` | [service] move-node-to-workspace T |
-| `RUN` | [service] move-node-to-workspace K |
-| `RUN` | [service] move-node-to-workspace C |
-| `RUN` | [service] move-node-to-workspace X |
-| `RUN` | [service] move-node-to-workspace M |
-| `RUN` | [service] move-node-to-workspace W |
-| `RUN` | [service] move-node-to-workspace O |
-| `RUN` | [service] move-node-to-workspace D |
-| `RUN` | [service] layout floating |
 
 ## cmux — 108
 
@@ -308,5 +293,8 @@ could be extracted. Listed for completeness:
 
 ---
 
-Regenerate with `node tools/keymap.mjs`. `--check` fails if this file is stale
-or if a shadowed binding exists.
+Regenerate with `node tools/keymap.mjs`. `--check` fails if either output is
+stale or if a shadowed binding exists.
+
+`chrome/keymap/` is the same data as a Chrome extension that overrides the New
+Tab page. It must work with no network at all.

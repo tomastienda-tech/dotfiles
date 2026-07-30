@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "✦ keymap",
+  "version": "1.0.0",
+  "description": "Todos los atajos de las seis capas del sistema, en la New Tab. Sin red, sin permisos.",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "icons": {
+    "128": "icon.png"
+  }
+}
